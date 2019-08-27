@@ -1,0 +1,202 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AMS.Models</name>
+    </assembly>
+    <members>
+        <member name="P:AMS.Models.Dto.ResetPasswordDto.UserId">
+            <summary>
+            用户ID
+            </summary>
+        </member>
+        <member name="P:AMS.Models.Dto.ResetPasswordDto.OldPassword">
+            <summary>
+            旧密码
+            </summary>
+        </member>
+        <member name="P:AMS.Models.Dto.ResetPasswordDto.NewPasswrod">
+            <summary>
+            新密码
+            </summary>
+        </member>
+        <member name="P:AMS.Models.Dto.RoleInfoDto.MenuIDS">
+            <summary>
+            菜单IDS集合
+            </summary>
+        </member>
+        <member name="P:AMS.Models.Dto.RoleInfoDto.ModuleIDS">
+            <summary>
+            模块IDS集合
+            </summary>
+        </member>
+        <!-- 对于成员“T:AMS.Models.Entity`1”忽略有格式错误的 XML 注释 -->
+        <member name="T:AMS.Models.Entity">
+             @class   Entity
+            
+             @brief   实体类
+            
+             @author  rxf
+             @date    2017/12/27
+            ************************************************************************************************
+        </member>
+        <member name="T:AMS.Models.Entitys.MenuInfo">
+             @class   MenuInfo
+            
+             @brief   功能信息表.
+            
+             @author  qyz
+             @date    2017/12/28
+            ************************************************************************************************
+        </member>
+        <member name="P:AMS.Models.Entitys.MenuInfo.MenuName">
+             @property    public string MenuName
+            
+             @brief   功能名称
+            
+             @return  The name of the menu.
+            ************************************************************************************************
+        </member>
+        <member name="P:AMS.Models.Entitys.MenuInfo.MenuType">
+             @property    public int MenuType
+            
+             @brief   功能类型
+            
+             @return  The type of the menu.
+            ************************************************************************************************
+        </member>
+        <member name="P:AMS.Models.Entitys.MenuInfo.Url">
+             @property    public string Url
+            
+             @brief   链接地址
+            
+             @return  The URL.
+            ************************************************************************************************
+        </member>
+        <member name="P:AMS.Models.Entitys.MenuInfo.ParentID">
+             @property    public Int64 ParentID
+            
+             @brief   父级ID
+            
+             @return  The identifier of the parent.
+            ************************************************************************************************
+        </member>
+        <member name="P:AMS.Models.Entitys.MenuInfo.MenuPic">
+             @property    public string MenuPic
+            
+             @brief   功能图标地址
+            
+             @return  The menu picture.
+            ************************************************************************************************
+        </member>
+        <member name="P:AMS.Models.Entitys.MenuInfo.Status">
+             @property    public int Status
+            
+             @brief   状态
+            
+             @return  The status.
+            ************************************************************************************************
+        </member>
+        <member name="P:AMS.Models.Entitys.MenuInfo.SortIndex">
+             @property    public int SortIndex
+            
+             @brief   菜单排序值
+            
+             @return  The sort index.
+            ************************************************************************************************
+        </member>
+        <member name="P:AMS.Models.Entitys.MenuInfo.Children">
+             @property    public MenuInfo Children
+            
+             @brief   子机构
+            
+             @return  The children.
+            ************************************************************************************************
+        </member>
+        <member name="T:AMS.Models.Entitys.RoleInfo">
+             @class   RoleInfo
+            
+             @brief   权限信息实体
+            
+             @author  rxf
+             @date    2017/12/25
+            ************************************************************************************************
+        </member>
+        <member name="P:AMS.Models.Entitys.RoleInfo.RoleName">
+             @property    public string RoleName
+            
+             @brief   角色名称
+            
+             @return  The name of the role.
+            ************************************************************************************************
+        </member>
+        <member name="P:AMS.Models.Entitys.RoleInfo.Description">
+             @property    public string Description
+            
+             @brief   角色描述
+            
+             @return  The description.
+            ************************************************************************************************
+        </member>
+        <member name="P:AMS.Models.Entitys.UserInfo.UserName">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:AMS.Models.Entitys.UserInfo.Name">
+             @property    public string Name
+            
+             @brief   姓名
+            
+             @return  The name.
+            ************************************************************************************************
+        </member>
+        <member name="P:AMS.Models.Entitys.UserInfo.Gender">
+             @property    public int Gender
+            
+             @brief   性别
+            
+             @return  The gender.
+            ************************************************************************************************
+        </member>
+        <member name="P:AMS.Models.Entitys.UserInfo.Status">
+             @property    public int Status
+            
+             @brief   账户状态 启用or禁用
+            
+             @return  The status.
+            ************************************************************************************************
+        </member>
+        <member name="P:AMS.Models.Entitys.UserInfo.UserPic">
+             @property    public string UserPic
+            
+             @brief   用户头像
+            
+             @return  The user picture.
+            ************************************************************************************************
+        </member>
+        <member name="P:AMS.Models.Entitys.UserInfo.WorkUnit">
+             @property    public string WorkUnit
+            
+             @brief   工作单位
+            
+             @return  The work unit.
+            ************************************************************************************************
+        </member>
+        <member name="P:AMS.Models.Entitys.UserInfo.CreateUserID">
+             @property    public long CreateUserID
+            
+             @brief   创建人ID
+            
+             @return  The identifier of the create user.
+            ************************************************************************************************
+        </member>
+        <member name="P:AMS.Models.Entitys.UserInfo.CreateUserTime">
+             @property    public DateTime CreateUserTime
+            
+             @brief   创建时间
+            
+             @return  The create user time.
+            ************************************************************************************************
+        </member>
+    </members>
+</doc>

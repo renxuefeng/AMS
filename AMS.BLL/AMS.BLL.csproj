@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AMS.DAL\AMS.DAL.csproj" />
+    <ProjectReference Include="..\Models\AMS.Models.csproj" />
+  </ItemGroup>
+
+</Project>
