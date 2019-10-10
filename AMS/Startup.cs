@@ -49,7 +49,7 @@ namespace AMS
             services.AddTransient<ResponseData>();
             services.AddDbContext<AMSDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("SqlServerConnection")),ServiceLifetime.Singleton);
-
+            services.AddCors();
             services.AddMvc().AddDataAnnotationsLocalization(options => {
                 options.DataAnnotationLocalizerProvider = (type, factory) =>
                     factory.Create(typeof(SharedResource));
@@ -148,6 +148,8 @@ namespace AMS
             app.UseAuthentication();
             // Use Localization
             app.ConfigureLocalization();
+            app.UseCors(builder =>
+            builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseMvc();
         }
     }

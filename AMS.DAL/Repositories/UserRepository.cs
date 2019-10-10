@@ -36,7 +36,7 @@ namespace AMS.DAL.Repositories
 
         public UserInfo GetUserInfo(Int64 id)
         {
-            var user = _dbContext.Set<UserInfo>().Include(x=>x.Roles).FirstOrDefault(it => it.Id == id);
+            var user = _dbContext.Set<UserInfo>().Include(x=>x.Roles).ThenInclude(x=>x.RoleInfo).ThenInclude(x=>x.Modules).FirstOrDefault(it => it.Id == id);
             if (user != null)
             {
                 return user;

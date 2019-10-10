@@ -46,8 +46,8 @@ namespace AMS.Controllers
                 }
                 else
                 {
-                    userInfo.Roles = new List<UserInRole>();
                     List<long> roleIDS = userInfo.Roles?.Select(x => x.Id)?.ToList();
+                    userInfo.Roles = new List<UserInRole>();
                     roleIDS.ForEach(x => userInfo.Roles?.Add(new UserInRole() { RoleId = x }));
                     userInfo.CreateUserID = long.Parse(User.FindFirst(x => x.Type == ClaimTypes.PrimarySid).Value);
                     userInfo.CreateUserTime = DateTime.Now;
@@ -202,7 +202,33 @@ namespace AMS.Controllers
             return _responseData;
         }
         /// <summary>
-        /// 获取用户列表
+        /// 获取已登录用户信息
+        /// </summary>
+        /// <returns></returns>
+        [WebMethodAction]
+        [HttpGet("GetUserInfo")]
+        public ActionResult<ResponseData> Get()
+        {
+            _responseData.Success = true;
+            UserInfo userInfo = _userInfoAppService.GetUserInfo(UserId);
+            if (userInfo.UserType == (int)UserTypeEnum.超级管理员)
+            {
+                Dictionary<int, string> pList = new Dictionary<int, string>();
+                foreach (ModulesType foo in Enum.GetValues(typeof(ModulesType)))
+                {
+                    pList.Add((int)foo, foo.ToString());
+                }
+                userInfo.Down["Modules"] = pList.Select(x=>x.Key).ToArray();
+            }
+            else
+            {
+                userInfo.Down["Modules"] = userInfo.Roles?.Select(x => x.RoleInfo).Select(y => y.Modules?.Select(z => z.ModuleID))?.FirstOrDefault().ToArray();
+            }
+            _responseData.Data = userInfo;
+            return _responseData;
+        }
+        /// <summary>
+        /// 获取用户信息
         /// </summary>
         /// <returns></returns>
         [WebMethodAction(ModulesType.获取用户信息)]
@@ -227,6 +253,13 @@ namespace AMS.Controllers
             }
             _responseData.Success = true;
             _responseData.Data = pList.ToArray();
+            return _responseData;
+        }
+        [WebMethodAction]
+        [HttpPost("Logout")]
+        public ActionResult<ResponseData> Logout()
+        {
+            _responseData.Success = true;
             return _responseData;
         }
     }
