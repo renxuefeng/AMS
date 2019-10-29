@@ -9,40 +9,24 @@ namespace AMS.DAL.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Log",
-                columns: table => new
-                {
-                    Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Message = table.Column<string>(nullable: true),
-                    MessageTemplate = table.Column<string>(nullable: true),
-                    Level = table.Column<string>(maxLength: 128, nullable: true),
-                    TimeStamp = table.Column<DateTime>(nullable: false),
-                    Exception = table.Column<string>(nullable: true),
-                    Properties = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Log", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "MenuInfo",
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    MenuName = table.Column<string>(maxLength: 20, nullable: false),
-                    MenuType = table.Column<int>(nullable: false),
-                    Url = table.Column<string>(maxLength: 200, nullable: true),
-                    ParentID = table.Column<long>(nullable: false),
-                    MenuPic = table.Column<string>(maxLength: 50, nullable: true),
-                    Status = table.Column<int>(nullable: false),
-                    SortIndex = table.Column<int>(nullable: true)
+                    MenuName = table.Column<string>(nullable: true),
+                    ParentID = table.Column<long>(nullable: true),
+                    Status = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MenuInfo", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MenuInfo_MenuInfo_ParentID",
+                        column: x => x.ParentID,
+                        principalTable: "MenuInfo",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -53,7 +37,7 @@ namespace AMS.DAL.Data.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     RoleName = table.Column<string>(maxLength: 20, nullable: false),
                     Description = table.Column<string>(maxLength: 20, nullable: true),
-                    CreateDateTime = table.Column<DateTime>(nullable: false),
+                    CreateDateTime = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()"),
                     CreateUserID = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
@@ -76,7 +60,7 @@ namespace AMS.DAL.Data.Migrations
                     UserType = table.Column<int>(nullable: false),
                     WorkUnit = table.Column<string>(maxLength: 30, nullable: true),
                     CreateUserID = table.Column<long>(nullable: false),
-                    CreateUserTime = table.Column<DateTime>(nullable: false)
+                    CreateUserTime = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()")
                 },
                 constraints: table =>
                 {
@@ -88,12 +72,12 @@ namespace AMS.DAL.Data.Migrations
                 columns: table => new
                 {
                     MenuID = table.Column<long>(nullable: false),
-                    Id = table.Column<long>(nullable: false),
-                    ModuleID = table.Column<long>(nullable: false)
+                    ModuleID = table.Column<long>(nullable: false),
+                    Id = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MenuInModule", x => x.MenuID);
+                    table.PrimaryKey("PK_MenuInModule", x => new { x.MenuID, x.ModuleID });
                     table.ForeignKey(
                         name: "FK_MenuInModule_MenuInfo_MenuID",
                         column: x => x.MenuID,
@@ -114,15 +98,15 @@ namespace AMS.DAL.Data.Migrations
                 {
                     table.PrimaryKey("PK_RoleInMenu", x => new { x.RoleId, x.MenuId });
                     table.ForeignKey(
-                        name: "FK_RoleInMenu_MenuInfo_MenuId",
+                        name: "FK_RoleInMenu_RoleInfo_MenuId",
                         column: x => x.MenuId,
-                        principalTable: "MenuInfo",
+                        principalTable: "RoleInfo",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RoleInMenu_RoleInfo_RoleId",
+                        name: "FK_RoleInMenu_MenuInfo_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "RoleInfo",
+                        principalTable: "MenuInfo",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -134,17 +118,18 @@ namespace AMS.DAL.Data.Migrations
                     Id = table.Column<long>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     RoleId = table.Column<long>(nullable: false),
+                    RoleInfoId = table.Column<long>(nullable: true),
                     ModuleID = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RoleInModule", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RoleInModule_RoleInfo_RoleId",
-                        column: x => x.RoleId,
+                        name: "FK_RoleInModule_RoleInfo_RoleInfoId",
+                        column: x => x.RoleInfoId,
                         principalTable: "RoleInfo",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -173,9 +158,57 @@ namespace AMS.DAL.Data.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "MenuInfo",
+                columns: new[] { "Id", "MenuName", "ParentID", "Status" },
+                values: new object[,]
+                {
+                    { 1L, "一级菜单1", null, 1 },
+                    { 2L, "一级菜单2", null, 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "RoleInfo",
+                columns: new[] { "Id", "CreateUserID", "Description", "RoleName" },
+                values: new object[] { 1L, 0L, null, "前台用户角色" });
+
+            migrationBuilder.InsertData(
                 table: "UserInfo",
                 columns: new[] { "Id", "CreateUserID", "CreateUserTime", "Gender", "Name", "Password", "Status", "UserName", "UserPic", "UserType", "WorkUnit" },
-                values: new object[] { 1511L, 0L, new DateTime(2019, 8, 27, 11, 5, 16, 253, DateTimeKind.Local).AddTicks(3916), 0, null, "123456", 0, "admin", null, 1, null });
+                values: new object[,]
+                {
+                    { 1511L, 0L, new DateTime(2019, 10, 29, 15, 27, 33, 910, DateTimeKind.Local).AddTicks(7688), 0, null, "123456", 0, "admin", null, 1, null },
+                    { 1512L, 0L, new DateTime(2019, 10, 29, 15, 27, 33, 913, DateTimeKind.Local).AddTicks(1200), 0, null, "123456", 0, "rxf", null, 0, null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "MenuInModule",
+                columns: new[] { "MenuID", "ModuleID", "Id" },
+                values: new object[,]
+                {
+                    { 1L, 2L, 1L },
+                    { 1L, 3L, 2L },
+                    { 1L, 4L, 3L }
+                });
+
+            migrationBuilder.InsertData(
+                table: "MenuInfo",
+                columns: new[] { "Id", "MenuName", "ParentID", "Status" },
+                values: new object[] { 3L, "一级菜单3", 1L, 1 });
+
+            migrationBuilder.InsertData(
+                table: "RoleInMenu",
+                columns: new[] { "RoleId", "MenuId", "Id" },
+                values: new object[] { 1L, 1L, 1L });
+
+            migrationBuilder.InsertData(
+                table: "UserInRole",
+                columns: new[] { "UserId", "RoleId", "Id" },
+                values: new object[] { 1512L, 1L, 1L });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MenuInfo_ParentID",
+                table: "MenuInfo",
+                column: "ParentID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoleInMenu_MenuId",
@@ -183,9 +216,9 @@ namespace AMS.DAL.Data.Migrations
                 column: "MenuId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoleInModule_RoleId",
+                name: "IX_RoleInModule_RoleInfoId",
                 table: "RoleInModule",
-                column: "RoleId");
+                column: "RoleInfoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserInfo_UserName",
@@ -201,9 +234,6 @@ namespace AMS.DAL.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Log");
-
             migrationBuilder.DropTable(
                 name: "MenuInModule");
 

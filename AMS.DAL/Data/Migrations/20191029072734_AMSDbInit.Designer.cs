@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AMS.DAL.Data.Migrations
 {
     [DbContext(typeof(AMSDbContext))]
-    [Migration("20190827030516_AMSDbInit")]
+    [Migration("20191029072734_AMSDbInit")]
     partial class AMSDbInit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,41 +21,37 @@ namespace AMS.DAL.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("AMS.Models.Entitys.LogInfo", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Exception");
-
-                    b.Property<string>("Level")
-                        .HasMaxLength(128);
-
-                    b.Property<string>("Message");
-
-                    b.Property<string>("MessageTemplate");
-
-                    b.Property<string>("Properties");
-
-                    b.Property<DateTime>("TimeStamp");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Log");
-                });
-
             modelBuilder.Entity("AMS.Models.Entitys.MenuInModule", b =>
                 {
                     b.Property<long>("MenuID");
 
-                    b.Property<long>("Id");
-
                     b.Property<long>("ModuleID");
 
-                    b.HasKey("MenuID");
+                    b.Property<long>("Id");
+
+                    b.HasKey("MenuID", "ModuleID");
 
                     b.ToTable("MenuInModule");
+
+                    b.HasData(
+                        new
+                        {
+                            MenuID = 1L,
+                            ModuleID = 2L,
+                            Id = 1L
+                        },
+                        new
+                        {
+                            MenuID = 1L,
+                            ModuleID = 3L,
+                            Id = 2L
+                        },
+                        new
+                        {
+                            MenuID = 1L,
+                            ModuleID = 4L,
+                            Id = 3L
+                        });
                 });
 
             modelBuilder.Entity("AMS.Models.Entitys.MenuInfo", b =>
@@ -64,27 +60,38 @@ namespace AMS.DAL.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("MenuName")
-                        .IsRequired()
-                        .HasMaxLength(20);
+                    b.Property<string>("MenuName");
 
-                    b.Property<string>("MenuPic")
-                        .HasMaxLength(50);
-
-                    b.Property<int>("MenuType");
-
-                    b.Property<long>("ParentID");
-
-                    b.Property<int?>("SortIndex");
+                    b.Property<long?>("ParentID");
 
                     b.Property<int>("Status");
 
-                    b.Property<string>("Url")
-                        .HasMaxLength(200);
-
                     b.HasKey("Id");
 
+                    b.HasIndex("ParentID");
+
                     b.ToTable("MenuInfo");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            MenuName = "一级菜单1",
+                            Status = 1
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            MenuName = "一级菜单2",
+                            Status = 1
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            MenuName = "一级菜单3",
+                            ParentID = 1L,
+                            Status = 1
+                        });
                 });
 
             modelBuilder.Entity("AMS.Models.Entitys.RoleInMenu", b =>
@@ -100,6 +107,14 @@ namespace AMS.DAL.Data.Migrations
                     b.HasIndex("MenuId");
 
                     b.ToTable("RoleInMenu");
+
+                    b.HasData(
+                        new
+                        {
+                            RoleId = 1L,
+                            MenuId = 1L,
+                            Id = 1L
+                        });
                 });
 
             modelBuilder.Entity("AMS.Models.Entitys.RoleInModule", b =>
@@ -112,9 +127,11 @@ namespace AMS.DAL.Data.Migrations
 
                     b.Property<long>("RoleId");
 
+                    b.Property<long?>("RoleInfoId");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("RoleId");
+                    b.HasIndex("RoleInfoId");
 
                     b.ToTable("RoleInModule");
                 });
@@ -125,7 +142,9 @@ namespace AMS.DAL.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("CreateDateTime");
+                    b.Property<DateTime>("CreateDateTime")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<long>("CreateUserID");
 
@@ -139,6 +158,15 @@ namespace AMS.DAL.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("RoleInfo");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            CreateDateTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreateUserID = 0L,
+                            RoleName = "前台用户角色"
+                        });
                 });
 
             modelBuilder.Entity("AMS.Models.Entitys.UserInRole", b =>
@@ -154,6 +182,14 @@ namespace AMS.DAL.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("UserInRole");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1512L,
+                            RoleId = 1L,
+                            Id = 1L
+                        });
                 });
 
             modelBuilder.Entity("AMS.Models.Entitys.UserInfo", b =>
@@ -164,7 +200,9 @@ namespace AMS.DAL.Data.Migrations
 
                     b.Property<long>("CreateUserID");
 
-                    b.Property<DateTime>("CreateUserTime");
+                    b.Property<DateTime>("CreateUserTime")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<int>("Gender");
 
@@ -200,12 +238,23 @@ namespace AMS.DAL.Data.Migrations
                         {
                             Id = 1511L,
                             CreateUserID = 0L,
-                            CreateUserTime = new DateTime(2019, 8, 27, 11, 5, 16, 253, DateTimeKind.Local).AddTicks(3916),
+                            CreateUserTime = new DateTime(2019, 10, 29, 15, 27, 33, 910, DateTimeKind.Local).AddTicks(7688),
                             Gender = 0,
                             Password = "123456",
                             Status = 0,
                             UserName = "admin",
                             UserType = 1
+                        },
+                        new
+                        {
+                            Id = 1512L,
+                            CreateUserID = 0L,
+                            CreateUserTime = new DateTime(2019, 10, 29, 15, 27, 33, 913, DateTimeKind.Local).AddTicks(1200),
+                            Gender = 0,
+                            Password = "123456",
+                            Status = 0,
+                            UserName = "rxf",
+                            UserType = 0
                         });
                 });
 
@@ -217,15 +266,23 @@ namespace AMS.DAL.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("AMS.Models.Entitys.MenuInfo", b =>
+                {
+                    b.HasOne("AMS.Models.Entitys.MenuInfo")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentID")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("AMS.Models.Entitys.RoleInMenu", b =>
                 {
-                    b.HasOne("AMS.Models.Entitys.MenuInfo", "MenuInfo")
-                        .WithMany("Roles")
+                    b.HasOne("AMS.Models.Entitys.RoleInfo", "RoleInfo")
+                        .WithMany("Menus")
                         .HasForeignKey("MenuId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("AMS.Models.Entitys.RoleInfo", "RoleInfo")
-                        .WithMany("Menus")
+                    b.HasOne("AMS.Models.Entitys.MenuInfo", "MenuInfo")
+                        .WithMany("Roles")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -233,9 +290,8 @@ namespace AMS.DAL.Data.Migrations
             modelBuilder.Entity("AMS.Models.Entitys.RoleInModule", b =>
                 {
                     b.HasOne("AMS.Models.Entitys.RoleInfo", "RoleInfo")
-                        .WithMany("Modules")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany()
+                        .HasForeignKey("RoleInfoId");
                 });
 
             modelBuilder.Entity("AMS.Models.Entitys.UserInRole", b =>

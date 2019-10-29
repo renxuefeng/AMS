@@ -95,12 +95,13 @@ namespace AMS.BLL.RoleApp
 
         public bool InsertOrUpdate(RoleInfo ri, List<long> menuList, List<long> moudel)
         {
-            ri.Modules = new List<RoleInModule>();
-            ri.Menus = new List<RoleInMenu>();
-            moudel?.ForEach(x => ri.Modules.Add(new RoleInModule() { RoleId = ri.Id, ModuleID = x }));
-            menuList?.ForEach(x => ri.Menus.Add(new RoleInMenu() { RoleId = ri.Id, MenuId = x }));
-            var roleInfo = _repository.InsertOrUpdate(ri);
-            return roleInfo == null ? false : true;
+            //ri.Modules = new List<RoleInModule>();
+            //ri.Menus = new List<RoleInMenu>();
+            //moudel?.ForEach(x => ri.Modules.Add(new RoleInModule() { RoleId = ri.Id, ModuleID = x }));
+            //menuList?.ForEach(x => ri.Menus.Add(new RoleInMenu() { RoleId = ri.Id, MenuId = x }));
+            //var roleInfo = _repository.InsertOrUpdate(ri);
+            //return roleInfo == null ? false : true;
+            return false;
         }
 
         /// <summary>

@@ -24,7 +24,14 @@ namespace AMS.DAL.Repositories
         /// <returns></returns>
         public RoleInfo GetRoleInfo(Int64 id)
         {
-            RoleInfo ri = _dbContext.Set<RoleInfo>().Where(it => it.Id == id).Include(o => o.Users).Include(o => o.Menus).Include(o => o.Modules).FirstOrDefault();
+            RoleInfo ri = _dbContext.Set<RoleInfo>().Where(it => it.Id == id)
+                .Include(o => o.Menus)
+                    .ThenInclude(a=>a.MenuInfo)
+                        .ThenInclude(b=>b.Modules)
+                .FirstOrDefault();
+            List<long> idsModules = new List<long>();
+            ri.Menus.ForEach(x => idsModules.AddRange(x.MenuInfo.Modules.Select(a => a.ModuleID)));
+            ri.Down["Modules"] = idsModules;
             return ri;
         }
 
@@ -63,9 +70,9 @@ namespace AMS.DAL.Repositories
         /// <returns></returns>
         public bool DeleteRoleInfo(long roleID)
         {
-            RoleInfo ri = _dbContext.Set<RoleInfo>().Where(it => it.Id == roleID).Include(x=>x.Modules).Include(x=>x.Menus).FirstOrDefault();
-            _dbContext.Set<RoleInfo>().Remove(ri);
-            _dbContext.SaveChanges();
+            //RoleInfo ri = _dbContext.Set<RoleInfo>().Where(it => it.Id == roleID).Include(x=>x.Modules).Include(x=>x.Menus).FirstOrDefault();
+            //_dbContext.Set<RoleInfo>().Remove(ri);
+            //_dbContext.SaveChanges();
             return true;
         }
     }

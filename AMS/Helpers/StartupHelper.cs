@@ -1,4 +1,5 @@
-﻿using AMS.BLL.RoleApp;
+﻿using AMS.BLL.MenuApp;
+using AMS.BLL.RoleApp;
 using AMS.BLL.UserApp;
 using AMS.Common.Configuration;
 using AMS.DAL.IRepositories;
@@ -47,6 +48,7 @@ namespace AMS.Helpers
         {
             services.AddSingleton<IUserRepository, UserRepository>();
             services.AddSingleton<IRoleRepository, RoleRepository>();
+            services.AddSingleton<IMenuRepository, MenuRepository>();
             return services;
         }
         /// <summary>
@@ -58,6 +60,7 @@ namespace AMS.Helpers
         {
             services.AddSingleton<IUserInfoAppService, UserInfoAppService>();
             services.AddSingleton<IRoleAppService, RoleAppService>();
+            services.AddSingleton<IMenuInfoAppService, MenuInfoAppService>();
             return services;
         }
         /// <summary>

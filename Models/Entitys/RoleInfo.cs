@@ -55,7 +55,7 @@ namespace AMS.Models.Entitys
 
         public List<UserInRole> Users { get; set; }
 
-        public List<RoleInModule> Modules { get; set; }
+        //public List<RoleInModule> Modules { get; set; }
         public List<RoleInMenu> Menus { get; set; }
     }
 }

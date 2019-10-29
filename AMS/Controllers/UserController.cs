@@ -205,7 +205,6 @@ namespace AMS.Controllers
         /// 获取已登录用户信息
         /// </summary>
         /// <returns></returns>
-        [WebMethodAction]
         [HttpGet("GetUserInfo")]
         public ActionResult<ResponseData> Get()
         {
@@ -222,7 +221,7 @@ namespace AMS.Controllers
             }
             else
             {
-                userInfo.Down["Modules"] = userInfo.Roles?.Select(x => x.RoleInfo).Select(y => y.Modules?.Select(z => z.ModuleID))?.FirstOrDefault().ToArray();
+                //userInfo.Down["Modules"] = userInfo.Roles?.Select(x => x.RoleInfo).Select(y => y.Modules?.Select(z => z.ModuleID))?.FirstOrDefault().ToArray();
             }
             _responseData.Data = userInfo;
             return _responseData;
@@ -255,7 +254,6 @@ namespace AMS.Controllers
             _responseData.Data = pList.ToArray();
             return _responseData;
         }
-        [WebMethodAction]
         [HttpPost("Logout")]
         public ActionResult<ResponseData> Logout()
         {

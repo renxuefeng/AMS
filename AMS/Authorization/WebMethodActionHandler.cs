@@ -35,7 +35,7 @@ namespace AMS.Authorization
                 {
                     var roleIDS = userInfo.Roles?.Select(x => x.RoleId).ToList();
                     List<long> moduleIDS = new List<long>();
-                    roleIDS?.ForEach(x => moduleIDS.AddRange(_roleAppService.GetRoleInfo(x).Modules?.Select(y => y.ModuleID).ToList()));
+                    //roleIDS?.ForEach(x => moduleIDS.AddRange(_roleAppService.GetRoleInfo(x).Menus.Select(a=>a.MenuInfo.Modules).ToList()));
                     moduleIDS.Distinct().ToList();
                     if (moduleIDS.Contains((long)requirement.ModulesType))
                     {

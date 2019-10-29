@@ -23,7 +23,8 @@ namespace Common
         获取角色信息,
         新增角色信息,
         编辑角色信息,
-        删除角色信息
+        删除角色信息,
+        查看菜单列表
     }
     public enum DatabaseType
     {

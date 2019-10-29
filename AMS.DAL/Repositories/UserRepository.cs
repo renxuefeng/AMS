@@ -29,14 +29,14 @@ namespace AMS.DAL.Repositories
         }
 
         /// <summary>
-        /// 根据RelationID获取用户信息
+        /// 根据ID获取用户信息
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
 
         public UserInfo GetUserInfo(Int64 id)
         {
-            var user = _dbContext.Set<UserInfo>().Include(x=>x.Roles).ThenInclude(x=>x.RoleInfo).ThenInclude(x=>x.Modules).FirstOrDefault(it => it.Id == id);
+            var user = _dbContext.Set<UserInfo>().Include(x => x.Roles).ThenInclude(x => x.RoleInfo).ThenInclude(x => x.Menus).FirstOrDefault(it => it.Id == id);
             if (user != null)
             {
                 return user;
