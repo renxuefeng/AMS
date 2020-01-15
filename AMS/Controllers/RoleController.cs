@@ -50,12 +50,42 @@ namespace AMS.Controllers
         /// <returns></returns>
         [WebMethodAction(ModulesType.获取角色列表)]
         [HttpGet]
-        public ActionResult<ResponseData> List()
+        public ActionResult<ResponseData> List(int startPage = 100, int pageSize = 100)
         {
+            //_responseData.Success = true;
+            //_responseData.Data = _roleAppService.GetAllList();
+            //return _responseData;
+            int count = 0;
+            int pagecount = 0;
             _responseData.Success = true;
-            _responseData.Data = _roleAppService.GetAllList();
+            List<RoleInfo> riList = _roleAppService.GetAllPageList(startPage, pageSize, out count, out pagecount, null);
+            riList.ForEach(x =>
+            {
+                x.Down["name"] = _userInfoAppService.GetUserInfo(x.CreateUserID)?.UserName;
+                // 获取关联权限信息
+                _roleAppService.GetRoleInfo(x.Id);
+            });
+            PageInfo pageInfo = new PageInfo();
+            pageInfo.data = riList;
+            pageInfo.rowCount = count;
+            pageInfo.pageCount = pagecount;
+            _responseData.Data = pageInfo;
             return _responseData;
         }
+        /// <summary>
+        /// 获取角色列表(分页)
+        /// </summary>
+        /// <returns></returns>
+        //[WebMethodAction(ModulesType.获取角色列表)]
+        //[HttpGet]
+        //public ActionResult<ResponseData> ListByPage(int startPage, int pageSize)
+        //{
+        //    int count = 0;
+        //    int pagecount = 0;
+        //    _responseData.Success = true;
+        //    _responseData.Data = _roleAppService.GetAllPageList(startPage, pageSize, out count, out pagecount,null);
+        //    return _responseData;
+        //}
         /// <summary>
         /// 新增角色信息
         /// </summary>
@@ -66,9 +96,11 @@ namespace AMS.Controllers
         {
             if (_roleAppService.GetRoleInfo(roleInfoDto.RoleName) == null)
             {
-                List<long> menuIDS = roleInfoDto.MenuIDS?.Where(x => x > 0).ToList();
+                //List<long> menuIDS = roleInfoDto.MenuIDS?.Where(x => x > 0).ToList();
                 List<long> moduleIDS = roleInfoDto.ModuleIDS?.Where(x => x > 0).ToList();
-                _responseData.Success = _roleAppService.InsertOrUpdate(roleInfoDto, menuIDS, moduleIDS);
+                roleInfoDto.CreateUserID = UserId;
+                roleInfoDto.CreateDateTime = DateTime.Now;
+                _responseData.Success = _roleAppService.InsertOrUpdate(roleInfoDto, null, moduleIDS);
             }
             else
             {

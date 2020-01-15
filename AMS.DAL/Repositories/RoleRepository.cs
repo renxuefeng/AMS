@@ -1,6 +1,7 @@
 ﻿using AMS.Common;
 using AMS.DAL.IRepositories;
 using AMS.Models.Entitys;
+using Common;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -26,12 +27,27 @@ namespace AMS.DAL.Repositories
         {
             RoleInfo ri = _dbContext.Set<RoleInfo>().Where(it => it.Id == id)
                 .Include(o => o.Menus)
-                    .ThenInclude(a=>a.MenuInfo)
-                        .ThenInclude(b=>b.Modules)
+                    .ThenInclude(a => a.MenuInfo)
+                        .ThenInclude(b => b.Modules)
+                .Include(c => c.Module)
                 .FirstOrDefault();
             List<long> idsModules = new List<long>();
-            ri.Menus.ForEach(x => idsModules.AddRange(x.MenuInfo.Modules.Select(a => a.ModuleID)));
-            ri.Down["Modules"] = idsModules;
+            List<string> nameModules = new List<string>();
+            if (ri.Menus != null && ri.Menus.Count >0)
+            {
+                ri.Menus.ForEach(x =>
+                {
+                    idsModules.AddRange(x.MenuInfo.Modules.Select(a => a.ModuleID));
+                    nameModules.AddRange(x.MenuInfo.Modules.Select(a => ((ModulesType)a.ModuleID).ToString()));
+                });
+            }
+            else if (ri.Module != null && ri.Module.Count > 0)
+            {
+                idsModules = ri.Module.Select(y => y.ModuleID).ToList();
+                nameModules = ri.Module.Select(a => ((ModulesType)a.ModuleID).ToString()).ToList();
+            }
+            ri.Down["modules"] = idsModules;
+            ri.Down["modulesName"] = string.Join(',', nameModules);
             return ri;
         }
 
@@ -70,9 +86,9 @@ namespace AMS.DAL.Repositories
         /// <returns></returns>
         public bool DeleteRoleInfo(long roleID)
         {
-            //RoleInfo ri = _dbContext.Set<RoleInfo>().Where(it => it.Id == roleID).Include(x=>x.Modules).Include(x=>x.Menus).FirstOrDefault();
-            //_dbContext.Set<RoleInfo>().Remove(ri);
-            //_dbContext.SaveChanges();
+            RoleInfo ri = _dbContext.Set<RoleInfo>().Where(it => it.Id == roleID).Include(x => x.Module).FirstOrDefault();
+            _dbContext.Set<RoleInfo>().Remove(ri);
+            _dbContext.SaveChanges();
             return true;
         }
     }

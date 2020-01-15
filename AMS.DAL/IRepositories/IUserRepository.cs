@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace AMS.DAL.IRepositories
@@ -53,5 +54,17 @@ namespace AMS.DAL.IRepositories
         bool DeleteUserInfo(long userId);
 
         IQueryable<UserInfo> GetUserQueryable();
+        /// <summary>
+        /// 获取用户分页列表（含角色信息）
+        /// </summary>
+        /// <param name="startPage"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="rowCount"></param>
+        /// <param name="pageCount"></param>
+        /// <param name="where"></param>
+        /// <param name="order"></param>
+        /// <param name="orderTime"></param>
+        /// <returns></returns>
+        IQueryable<UserInfo> UserListIncludeRole(int startPage, int pageSize, out int rowCount, out int pageCount, Expression<Func<UserInfo, bool>> where = null, Expression<Func<UserInfo, object>> order = null, Expression<Func<UserInfo, DateTime>> orderTime = null);
     }
 }

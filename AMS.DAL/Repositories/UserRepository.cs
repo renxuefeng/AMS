@@ -36,7 +36,14 @@ namespace AMS.DAL.Repositories
 
         public UserInfo GetUserInfo(Int64 id)
         {
-            var user = _dbContext.Set<UserInfo>().Include(x => x.Roles).ThenInclude(x => x.RoleInfo).ThenInclude(x => x.Menus).FirstOrDefault(it => it.Id == id);
+            var user = _dbContext.Set<UserInfo>()
+                .Include(x => x.Roles)
+                    .ThenInclude(x => x.RoleInfo)
+                        .ThenInclude(x => x.Menus)
+                .Include(x => x.Roles)
+                    .ThenInclude(x => x.RoleInfo)
+                        .ThenInclude(x=>x.Module)
+                .FirstOrDefault(it => it.Id == id);
             if (user != null)
             {
                 return user;
@@ -125,6 +132,33 @@ namespace AMS.DAL.Repositories
         {
             var userinfo = _dbContext.Set<UserInfo>().Where(c => c.UserName == userName && c.Password == password).FirstOrDefault();
             return userinfo;
+        }
+
+        public IQueryable<UserInfo> UserListIncludeRole(int startPage, int pageSize, out int rowCount, out int pageCount, Expression<Func<UserInfo, bool>> where = null, Expression<Func<UserInfo, object>> order = null, Expression<Func<UserInfo, DateTime>> orderTime = null)
+        {
+            var result = from p in _dbContext.Set<UserInfo>().Include(a=>a.Roles)
+                         select p;
+            if (where != null)
+                result = result.Where(where);
+            if (order != null)
+                result = result.OrderBy(order);
+            else if (orderTime != null)
+                result = result.OrderByDescending(orderTime);
+            else
+                result = result.OrderBy(m => m.Id);
+            rowCount = result.Count();
+            pageCount = (int)rowCount / pageSize;
+            if (rowCount % pageSize != 0)
+            {
+                //如果余数不为0总页数就加上1
+                pageCount = pageCount + 1;
+            }
+            // 请求的起始页大于总页数则取最后一页数据
+            if (pageCount > 0 && startPage > pageCount)
+            {
+                startPage = pageCount;
+            }
+            return result.Skip((startPage - 1) * pageSize).Take(pageSize);
         }
     }
 }

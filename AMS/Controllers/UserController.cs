@@ -12,6 +12,7 @@ using AMS.Models.Entitys;
 using Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -46,9 +47,12 @@ namespace AMS.Controllers
                 }
                 else
                 {
-                    List<long> roleIDS = userInfo.Roles?.Select(x => x.Id)?.ToList();
-                    userInfo.Roles = new List<UserInRole>();
-                    roleIDS.ForEach(x => userInfo.Roles?.Add(new UserInRole() { RoleId = x }));
+                    List<long> roleIDS = JsonConvert.DeserializeObject<List<long>>(userInfo.Up["roleIDS"].ToString());
+                    if (roleIDS != null && roleIDS.Count > 0)
+                    {
+                        userInfo.Roles = new List<UserInRole>();
+                        roleIDS?.ForEach(x => userInfo.Roles?.Add(new UserInRole() { RoleId = x }));
+                    }
                     userInfo.CreateUserID = long.Parse(User.FindFirst(x => x.Type == ClaimTypes.PrimarySid).Value);
                     userInfo.CreateUserTime = DateTime.Now;
                     var user = _userInfoAppService.InsertOrUpdate(userInfo);
@@ -73,6 +77,8 @@ namespace AMS.Controllers
                 // 根据需要添加
                 info.Status = userInfo.Status;
                 info.UserType = userInfo.UserType;
+                info.Name = userInfo.Name;
+                info.UserName = userInfo.UserName;
                 List<long> roleIDS = userInfo.Roles?.Select(x => x.Id)?.ToList();
                 info.Roles = new List<UserInRole>();
                 roleIDS.ForEach(x => info.Roles.Add(new UserInRole() { UserId = info.Id, RoleId = x }));
@@ -195,10 +201,21 @@ namespace AMS.Controllers
         /// <returns></returns>
         [WebMethodAction(ModulesType.获取用户列表)]
         [HttpGet]
-        public ActionResult<ResponseData> List()
+        public ActionResult<ResponseData> List(int startPage,int pageSize)
         {
+            int count = 0;
+            int pagecount = 0;
             _responseData.Success = true;
-            _responseData.Data = _userInfoAppService.GetUserList();
+            PageInfo pageInfo = new PageInfo();
+            List<UserInfo> uiList = _userInfoAppService.GetUserList(startPage, pageSize, out count, out pagecount);
+            // 取用户角色名称下发前台
+            uiList.ForEach(x => {
+                x.Down["roleName"] = string.Join(',', x.Roles.Select(y => y.RoleInfo?.RoleName) );
+            });
+            pageInfo.data = uiList;
+            pageInfo.rowCount = count;
+            pageInfo.pageCount = pagecount;
+            _responseData.Data = pageInfo;
             return _responseData;
         }
         /// <summary>
@@ -209,21 +226,30 @@ namespace AMS.Controllers
         public ActionResult<ResponseData> Get()
         {
             _responseData.Success = true;
-            UserInfo userInfo = _userInfoAppService.GetUserInfo(UserId);
-            if (userInfo.UserType == (int)UserTypeEnum.超级管理员)
+            if (UserId > 0)
             {
-                Dictionary<int, string> pList = new Dictionary<int, string>();
-                foreach (ModulesType foo in Enum.GetValues(typeof(ModulesType)))
+                UserInfo userInfo = _userInfoAppService.GetUserInfo(UserId);
+                if (userInfo.UserType == (int)UserTypeEnum.超级管理员)
                 {
-                    pList.Add((int)foo, foo.ToString());
+                    Dictionary<int, string> pList = new Dictionary<int, string>();
+                    foreach (ModulesType foo in Enum.GetValues(typeof(ModulesType)))
+                    {
+                        pList.Add((int)foo, foo.ToString());
+                    }
+                    userInfo.Down["Modules"] = pList.Select(x => x.Key).ToArray();
                 }
-                userInfo.Down["Modules"] = pList.Select(x=>x.Key).ToArray();
+                else
+                {
+                    userInfo.Down["Modules"] = userInfo.Roles?.Select(x => x.RoleInfo).Select(y => y.Module)?.FirstOrDefault().ToArray().Select(x => x.ModuleID);
+                    //userInfo.Down["Modules"] = userInfo.Roles?.Select(x => x.RoleInfo).Select(y => y.Modules?.Select(z => z.ModuleID))?.FirstOrDefault().ToArray();
+                }
+                _responseData.Data = userInfo;
             }
             else
             {
-                //userInfo.Down["Modules"] = userInfo.Roles?.Select(x => x.RoleInfo).Select(y => y.Modules?.Select(z => z.ModuleID))?.FirstOrDefault().ToArray();
+                _responseData.Success = false;
+                _responseData.Message = "用户过期，请重新登录";
             }
-            _responseData.Data = userInfo;
             return _responseData;
         }
         /// <summary>

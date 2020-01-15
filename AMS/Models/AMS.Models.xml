@@ -39,39 +39,6 @@
              @date    2017/12/27
             ************************************************************************************************
         </member>
-        <member name="T:AMS.Models.Entitys.MenuInfo">
-             @class   MenuInfo
-            
-             @brief   功能信息表.
-            
-             @author  qyz
-             @date    2017/12/28
-            ************************************************************************************************
-        </member>
-        <member name="P:AMS.Models.Entitys.MenuInfo.MenuName">
-             @property    public string MenuName
-            
-             @brief   功能名称
-            
-             @return  The name of the menu.
-            ************************************************************************************************
-        </member>
-        <member name="P:AMS.Models.Entitys.MenuInfo.MenuType">
-             @property    public int MenuType
-            
-             @brief   功能类型
-            
-             @return  The type of the menu.
-            ************************************************************************************************
-        </member>
-        <member name="P:AMS.Models.Entitys.MenuInfo.Url">
-             @property    public string Url
-            
-             @brief   链接地址
-            
-             @return  The URL.
-            ************************************************************************************************
-        </member>
         <member name="P:AMS.Models.Entitys.MenuInfo.ParentID">
              @property    public Int64 ParentID
             
@@ -80,28 +47,12 @@
              @return  The identifier of the parent.
             ************************************************************************************************
         </member>
-        <member name="P:AMS.Models.Entitys.MenuInfo.MenuPic">
-             @property    public string MenuPic
-            
-             @brief   功能图标地址
-            
-             @return  The menu picture.
-            ************************************************************************************************
-        </member>
         <member name="P:AMS.Models.Entitys.MenuInfo.Status">
              @property    public int Status
             
              @brief   状态
             
              @return  The status.
-            ************************************************************************************************
-        </member>
-        <member name="P:AMS.Models.Entitys.MenuInfo.SortIndex">
-             @property    public int SortIndex
-            
-             @brief   菜单排序值
-            
-             @return  The sort index.
             ************************************************************************************************
         </member>
         <member name="P:AMS.Models.Entitys.MenuInfo.Children">

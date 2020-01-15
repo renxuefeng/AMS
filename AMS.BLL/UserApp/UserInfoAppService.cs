@@ -40,7 +40,7 @@ namespace AMS.BLL.UserApp
         }
         public List<UserInfo> GetUserList(int startPage, int pageSize, out int rowCount, out int pageCount)
         {
-            return _repository.LoadPageList(startPage, pageSize, out rowCount, out pageCount, null, null).ToList();
+            return _repository.UserListIncludeRole(startPage, pageSize, out rowCount, out pageCount, null, null).ToList();
         }
         public List<UserInfo> GetUserList(int startPage, int pageSize, out int rowCount, out int pageCount, Expression<Func<UserInfo, bool>> where)
         {
