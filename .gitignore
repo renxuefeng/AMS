@@ -1,0 +1,16 @@
+
+.vs/AMS/v15/
+.ide/
+AMS.BLL/bin/
+*.dll
+AMS.BLL/obj/
+AMS.DAL/bin/
+AMS.DAL/obj/
+AMS.BLL/obj/
+Common/bin/
+Common/obj/
+Models/obj/
+Models/bin/
+AMS/bin/
+AMS/obj/
+AMS/bin/Debug/netcoreapp2.2/AMS.BLL.dll
