@@ -59,7 +59,11 @@ namespace AMS.DAL
                 .HasOne(pt => pt.MenuInfo)
                 .WithMany(t => t.Roles)
                 .HasForeignKey(pt => pt.RoleId);
-
+            // 角色权限关联表
+            modelBuilder.Entity<RoleInModule>()
+                .HasOne(p => p.RoleInfo)
+                .WithMany(b => b.Module)
+                .OnDelete(DeleteBehavior.Cascade);
             // 菜单权限关联表
             modelBuilder.Entity<MenuInModule>()
                 .HasKey(pt => new { pt.MenuID, pt.ModuleID });

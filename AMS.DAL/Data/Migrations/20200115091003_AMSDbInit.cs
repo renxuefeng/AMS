@@ -129,7 +129,7 @@ namespace AMS.DAL.Data.Migrations
                         column: x => x.RoleInfoId,
                         principalTable: "RoleInfo",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -176,8 +176,8 @@ namespace AMS.DAL.Data.Migrations
                 columns: new[] { "Id", "CreateUserID", "CreateUserTime", "Gender", "Name", "Password", "Status", "UserName", "UserPic", "UserType", "WorkUnit" },
                 values: new object[,]
                 {
-                    { 1511L, 0L, new DateTime(2019, 10, 29, 15, 27, 33, 910, DateTimeKind.Local).AddTicks(7688), 0, null, "123456", 0, "admin", null, 1, null },
-                    { 1512L, 0L, new DateTime(2019, 10, 29, 15, 27, 33, 913, DateTimeKind.Local).AddTicks(1200), 0, null, "123456", 0, "rxf", null, 0, null }
+                    { 1511L, 0L, new DateTime(2020, 1, 15, 17, 10, 2, 889, DateTimeKind.Local).AddTicks(5017), 0, null, "123456", 0, "admin", null, 1, null },
+                    { 1512L, 0L, new DateTime(2020, 1, 15, 17, 10, 2, 891, DateTimeKind.Local).AddTicks(7205), 0, null, "123456", 0, "rxf", null, 0, null }
                 });
 
             migrationBuilder.InsertData(

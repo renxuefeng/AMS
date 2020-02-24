@@ -86,7 +86,7 @@ namespace AMS.DAL.Repositories
         /// <returns></returns>
         public bool DeleteRoleInfo(long roleID)
         {
-            RoleInfo ri = _dbContext.Set<RoleInfo>().Where(it => it.Id == roleID).Include(x => x.Module).FirstOrDefault();
+            RoleInfo ri = _dbContext.Set<RoleInfo>().Where(it => it.Id == roleID).FirstOrDefault();
             _dbContext.Set<RoleInfo>().Remove(ri);
             _dbContext.SaveChanges();
             return true;

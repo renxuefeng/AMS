@@ -236,7 +236,7 @@ namespace AMS.DAL.Data.Migrations
                         {
                             Id = 1511L,
                             CreateUserID = 0L,
-                            CreateUserTime = new DateTime(2019, 10, 29, 15, 27, 33, 910, DateTimeKind.Local).AddTicks(7688),
+                            CreateUserTime = new DateTime(2020, 1, 15, 17, 10, 2, 889, DateTimeKind.Local).AddTicks(5017),
                             Gender = 0,
                             Password = "123456",
                             Status = 0,
@@ -247,7 +247,7 @@ namespace AMS.DAL.Data.Migrations
                         {
                             Id = 1512L,
                             CreateUserID = 0L,
-                            CreateUserTime = new DateTime(2019, 10, 29, 15, 27, 33, 913, DateTimeKind.Local).AddTicks(1200),
+                            CreateUserTime = new DateTime(2020, 1, 15, 17, 10, 2, 891, DateTimeKind.Local).AddTicks(7205),
                             Gender = 0,
                             Password = "123456",
                             Status = 0,
@@ -288,8 +288,9 @@ namespace AMS.DAL.Data.Migrations
             modelBuilder.Entity("AMS.Models.Entitys.RoleInModule", b =>
                 {
                     b.HasOne("AMS.Models.Entitys.RoleInfo", "RoleInfo")
-                        .WithMany()
-                        .HasForeignKey("RoleInfoId");
+                        .WithMany("Module")
+                        .HasForeignKey("RoleInfoId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("AMS.Models.Entitys.UserInRole", b =>
